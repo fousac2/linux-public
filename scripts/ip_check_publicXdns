@@ -1,0 +1,29 @@
+#!/bin/bash
+#MAILTO=name@example.com
+
+# TODO : add parallel processing
+# TODO : add successfull commands execution : else mail is send with errors ...
+
+mail_address="name@example.com"
+
+# ... | xargs  ## trim spaces
+domain="subdomain.example.com"
+ip_remote=$(dig $domain +short | xargs)
+# echo $ip_remote
+
+ip_local=$(curl -s ifconfig.me | xargs)
+# echo $ip_local
+
+if [[ $ip_remote != $ip_local ]]
+then
+        # echo "not ok"
+        message="$domain: Remote IP $ip_remote is different to Local IP $ip_local !!!"
+        >&2 echo $message
+        logger -s -t 'dnscheck' $message
+        echo -e "To:$mail_address\nSubject: IP Change of $domain'\n\n$message\n" | sendmail $mail_address
+        exit 1
+else
+        message="Remote IP $ip_remote is same as Local IP $ip_local :)"
+        echo $message
+        logger -s -t 'dnscheck' $message
+fi
