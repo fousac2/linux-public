@@ -1,0 +1,4 @@
+https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_Windows
+
+default value is not there > to reset remove registry key
+
