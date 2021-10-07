@@ -1,0 +1,37 @@
+```bash
+# ssh keys for git repos - start
+env=~/.ssh/agent.env
+
+# starting ssh-agent on Git for Widnows
+# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows
+agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
+
+# Tip: If you want ssh-agent to forget your key after some time, you can configure it to do so by running ssh-add -t <seconds>.
+agent_start () {
+    (umask 077; ssh-agent >| "$env")
+#    (umask 077; ssh-agent -d 360000 >| "$env")
+    . "$env" >| /dev/null ; 
+	}
+
+# add ssh private keys for usage
+ssh_add_private_keys() {
+	find ~/.ssh/ -type f -exec grep -l "PRIVATE" {} \; | xargs ssh-add &> /dev/null
+}
+
+agent_load_env
+
+# agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
+agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
+
+if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
+    agent_start
+#    ssh-add
+	ssh_add_private_keys
+elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
+#    ssh-add
+	ssh_add_private_keys
+fi
+
+unset env
+# ssh keys for git repos - end
+```
