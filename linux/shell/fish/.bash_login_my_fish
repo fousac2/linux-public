@@ -2,16 +2,20 @@
 
 # colors in shell : https://www.growingwiththeweb.com/2015/05/colours-in-gnome-terminal.html
 
-echo -e "\e[32m""***************** Status ********************\e[0m"
-# echo -e "\e[32;41m""***************** Status ********************\e[0m"
-# echo "APT: $(apt list --upgradable 2>&1)"
-# echo "TMUX: $(tmux ls 2>&1)"
-# bash 
-# echo -e "\033[33mTMUX: $(tmux ls 2>&1)\e[0m"
-# fish
-echo -e "\033[33mTMUX:"(tmux ls 2>&1)"\e[0m"
-#echo -e "\033[33;41mTMUX: `tmux ls 2>&1`\e[0m"
-echo -e "\x1B[34m***************** Status ********************\e[0m"
-#echo -e "\x1B[34;47m***************** Status ********************\e[0m"
-echo -e "\033[0m"
+# if it's login shell -> do echoing
+# if scp then if it returns something it's not working ... for non-login-shell
+if status --is-login
+	echo -e "\e[32m""***************** Status ********************\e[0m"
+	# echo -e "\e[32;41m""***************** Status ********************\e[0m"
+	# echo "APT: $(apt list --upgradable 2>&1)"
+	# echo "TMUX: $(tmux ls 2>&1)"
+	# bash 
+	# echo -e "\033[33mTMUX: $(tmux ls 2>&1)\e[0m"
+	# fish
+	echo -e "\033[33mTMUX:"(tmux ls 2>&1)"\e[0m"
+	#echo -e "\033[33;41mTMUX: `tmux ls 2>&1`\e[0m"
+	echo -e "\x1B[34m***************** Status ********************\e[0m"
+	#echo -e "\x1B[34;47m***************** Status ********************\e[0m"
+	echo -e "\033[0m"
+end
 
